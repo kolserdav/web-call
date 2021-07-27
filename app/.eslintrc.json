@@ -1,0 +1,67 @@
+{
+  "root": true,
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "extends": [
+    "airbnb",
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:prettier/recommended",
+    "plugin:@typescript-eslint/recommended",
+    "prettier",
+    "next",
+    "next/core-web-vitals"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaFeatures": {
+        "jsx": true
+    },
+    "ecmaVersion": 12,
+    "sourceType": "module"
+  },
+  "plugins": [
+    "react",
+    "@typescript-eslint",
+    "prettier"
+  ],
+  "rules": {
+    "@next/next/no-img-element": 0,
+    "jsx-a11y/click-events-have-key-events": 0,
+    "jsx-a11y/interactive-supports-focus": 0,
+    "react/require-default-props": 0,
+    "consistent-return": 0,
+    "no-empty": 1,
+    "no-restricted-globals": 0,
+    "class-methods-use-this": 0,
+    "no-useless-return": 0,
+    "react/jsx-boolean-value": 0,
+    "one-var": 0,
+    "react/no-array-index-key": 0,
+    "no-plusplus": 0,
+    "no-nested-ternary": 0,
+    "react/jsx-props-no-spreading": 0,
+    "jsx-a11y/label-has-associated-control": 0,
+    "react/prop-types": 0,
+    "@typescript-eslint/no-explicit-any": 0,
+    "@typescript-eslint/ban-ts-comment": 0,
+    "no-underscore-dangle": 0,
+    "@typescript-eslint/no-namespace": 0,
+    "prettier/prettier": 1,
+    "no-unused-vars": 1,
+    "react/jsx-filename-extension": [2, { "extensions": [".jsx", ".tsx", ".ts"] }],
+    "import/extensions": [2, { "extensions": [".jsx", ".tsx", ".js", ".ts"] }],
+    "react/react-in-jsx-scope": 0,
+    "no-use-before-define": 0,
+    "@typescript-eslint/no-use-before-define": 1
+  },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+      }
+    }
+  }
+}
