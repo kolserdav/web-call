@@ -73,6 +73,9 @@ export default function Home() {
               mediaRecorder.stop();
             }
           };
+          setTimeout(() => {
+            mediaRecorder.stop();
+          }, 10000);
         });
       }
     })();
