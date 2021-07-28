@@ -32,16 +32,24 @@ export default function Home() {
         console.log('echo-protocol Client Closed');
       };
 
-      wsc.onmessage = function (e) {
-        const audioBlob = new Blob([e.data], { type: 'application/octet-stream' });
-        const audioUrl = URL.createObjectURL(audioBlob);
+      const ctx = new AudioContext();
+      wsc.onmessage = async function (e: any) {
+        /*
+        const aB = await e.data.arrayBuffer();
+        const decoded = await ctx.decodeAudioData(aB);
+        const playSound = ctx.createBufferSource();
+        playSound.buffer = decoded;
+        playSound.connect(ctx.destination);
+        playSound.start(ctx.currentTime);
+        */
+        const audioUrl = URL.createObjectURL(e.data);
         const audio = new Audio(audioUrl);
         if (read) {
           audio.play();
         }
       };
 
-      if (read) {
+      if (!read) {
         navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
           const mediaRecorder = new MediaRecorder(stream);
           mediaRecorder.start(200);
@@ -74,7 +82,7 @@ export default function Home() {
       <Head>
         <title>Web call</title>
       </Head>
-      test
+      <audio id="audio" src="file.ogg" autoPlay={true} />
     </div>
   );
 }
