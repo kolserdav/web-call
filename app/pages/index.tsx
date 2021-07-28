@@ -29,7 +29,8 @@ export default function Home() {
       };
 
       wsc.onmessage = function (e) {
-        const audioBlob = new Blob([e.data]);
+        console.log(e.data);
+        const audioBlob = new Blob([e.data], { type: 'application/octet-stream' });
         const audioUrl = URL.createObjectURL(audioBlob);
         const audio = new Audio(audioUrl);
         audio.play();

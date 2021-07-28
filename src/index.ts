@@ -10,7 +10,13 @@ const wss = new WebSocket.Server({ port: 8080 });
 wss.on('connection', function connection(ws) {
   const fileStream = fs.createWriteStream(`${DATA_PATH}/file.ogg`, { flags: 'r+' });
   const dup = duplexify();
+  const readStream = fs.createReadStream(`${DATA_PATH}/file.ogg`);
+  dup.setReadable(readStream);
+  dup.on('data', function (data) {
+    ws.send(data);
+  });
   dup.setWritable(fileStream);
+  readStream.pipe(fileStream);
 
   dup.on('error', function (err) {
     console.error(err.message);
@@ -22,12 +28,6 @@ wss.on('connection', function connection(ws) {
 
   ws.on('message', function incoming(message) {
     if (message === 'start') {
-      const readStream = fs.createReadStream(`${DATA_PATH}/file.ogg`);
-      dup.setReadable(readStream);
-      dup.on('data', function (data) {
-        console.log(data);
-        ws.send(data);
-      });
       return;
     }
     if (message === 'end') {
