@@ -13,10 +13,10 @@ wss.on('connection', function connection(ws) {
   const readStream = fs.createReadStream(`${DATA_PATH}/file.ogg`);
   dup.setReadable(readStream);
   dup.on('data', function (data) {
+    console.log(1);
     ws.send(data);
   });
   dup.setWritable(fileStream);
-  readStream.pipe(fileStream);
 
   dup.on('error', function (err) {
     console.error(err.message);
