@@ -33,19 +33,45 @@ export default function Home() {
       };
 
       const ctx = new AudioContext();
-      wsc.onmessage = async function (e: any) {
-        /*
-        const aB = await e.data.arrayBuffer();
+      let d = 0;
+      let i = 0;
+      const chunks = new Blob();
+      let gAb;
+      async function playChunk() {
+        const aB = await chunks[i].arrayBuffer();
         const decoded = await ctx.decodeAudioData(aB);
-        const playSound = ctx.createBufferSource();
-        playSound.buffer = decoded;
-        playSound.connect(ctx.destination);
-        playSound.start(ctx.currentTime);
-        */
-        const audioUrl = URL.createObjectURL(e.data);
-        const audio = new Audio(audioUrl);
+        await new Promise((resolve) => {
+          if (chunks[i]) {
+            const playSound = ctx.createBufferSource();
+            playSound.buffer = decoded;
+            playSound.connect(ctx.destination);
+            playSound.start(0);
+            playSound.onended = async () => {
+              resolve(0);
+            };
+          }
+        });
+        i++;
+        if (chunks[i]) {
+          console.log(i, chunks);
+          await playChunk();
+        }
+      }
+      wsc.onmessage = async function (e: any) {
         if (read) {
-          audio.play();
+          chunks.push(e.data);
+          if (d !== 5) d++;
+          if (d === 5) {
+            d++;
+            await playChunk();
+          }
+
+          /*
+          const mS = new MediaStream();
+          mS.addTrack(await e.data.arrayBuffer());
+          const mediaStreamSource = ctx.createMediaStreamSource(mS);
+          mediaStreamSource.connect(ctx.destination);
+          */
         }
       };
 
@@ -85,7 +111,6 @@ export default function Home() {
       <Head>
         <title>Web call</title>
       </Head>
-      <audio id="audio" src="file.ogg" autoPlay={true} />
     </div>
   );
 }

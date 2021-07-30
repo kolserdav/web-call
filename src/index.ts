@@ -8,12 +8,12 @@ const DATA_PATH = path.resolve(__dirname, '../data');
 const wss = new WebSocket.Server({ port: 8080 });
 
 wss.on('connection', function connection(ws) {
-  const fileStream = fs.createWriteStream(`${DATA_PATH}/file.ogg`, { flags: 'r+' });
+  const streamFile = `${DATA_PATH}/file.ogg`;
+  const fileStream = fs.createWriteStream(streamFile, { flags: 'r+' });
   const dup = duplexify();
-  const readStream = fs.createReadStream(`${DATA_PATH}/file.ogg`);
+  const readStream = fs.createReadStream(streamFile);
   dup.setReadable(readStream);
   dup.on('data', function (data) {
-    console.log(1);
     ws.send(data);
   });
   dup.setWritable(fileStream);
