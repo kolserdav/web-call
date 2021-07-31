@@ -59,13 +59,14 @@ export default function Home() {
       }
       wsc.onmessage = async function (e: any) {
         if (read) {
-          chunks.push(e.data);
+          /*
+          chunks.append(e.data);
           if (d !== 5) d++;
           if (d === 5) {
             d++;
             await playChunk();
           }
-
+          */
           /*
           const mS = new MediaStream();
           mS.addTrack(await e.data.arrayBuffer());
@@ -111,6 +112,10 @@ export default function Home() {
       <Head>
         <title>Web call</title>
       </Head>
+      <audio id="videoPlayer" controls autoPlay={true}>
+        {' '}
+        <source src="http://localhost:3001/get" type="audio/ogg" />
+      </audio>
     </div>
   );
 }
