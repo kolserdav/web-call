@@ -1,10 +1,71 @@
+/* eslint-disable jsx-a11y/media-has-caption */
 import { useEffect } from 'react';
 import Head from 'next/head';
 import Router from 'next/router';
 import * as WebSocket from 'websocket';
+import io from 'socket.io-client';
 import styles from '../styles/Home.module.css';
 
+const ROOM_ID = 1;
+
 export default function Home() {
+  useEffect(() => {
+    const peer = new Peer(undefined, {
+      path: '/myapp',
+      host: 'localhost',
+      port: '9000',
+    });
+    const conn = peer.connect('another-peers-id');
+    // on open will be launch when you successfully connect to PeerServer
+    conn.on('open', function () {
+      console.log(1);
+      conn.send('hi!');
+    });
+    peer.on('connection', function (connect) {
+      console.log('connected');
+      connect.on('data', function (data) {
+        // Will print 'hi!'
+        console.log(data);
+      });
+    });
+    // Call
+    const getUserMedia =
+      navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+    getUserMedia(
+      { video: false, audio: true },
+      function (stream) {
+        console.log(222);
+        const call = peer.call('another-peers-id', stream);
+        call.on('stream', function (remoteStream) {
+          console.log(remoteStream);
+        });
+      },
+      function (err) {
+        console.log('Failed to get local stream', err);
+      }
+    );
+    // Answer
+    peer.on('call', function (call) {
+      console.log(223);
+      getUserMedia(
+        { video: true, audio: true },
+        function (stream) {
+          call.answer(stream); // Answer the call with an A/V stream.
+          call.on('stream', function (remoteStream) {
+            console.log(remoteStream);
+            // Show stream in some video/canvas element.
+          });
+        },
+        function (err) {
+          console.log('Failed to get local stream', err);
+        }
+      );
+    });
+  }, []);
+  return <div className="container"></div>;
+}
+
+/*export default function Home() {
   useEffect(() => {
     const { asPath } = Router;
     const read = asPath === '/?read=1';
@@ -67,12 +128,12 @@ export default function Home() {
             await playChunk();
           }
           */
-          /*
+/*
           const mS = new MediaStream();
           mS.addTrack(await e.data.arrayBuffer());
           const mediaStreamSource = ctx.createMediaStreamSource(mS);
           mediaStreamSource.connect(ctx.destination);
-          */
+          
         }
       };
 
@@ -119,3 +180,4 @@ export default function Home() {
     </div>
   );
 }
+*/
